@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-06-07T20:03:24.1254449Z",
+  "extensions": [
+    {
+      "id": "akasha",
+      "name": "Akasha",
+      "description": "EPUB-читалка",
+      "author": null,
+      "version": "0.1.2",
+      "keplerApiVersion": "^1.1.0",
+      "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/akasha/icon.svg",
+      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/akasha-v0.1.2/akasha-0.1.2.kext",
+      "sha256": "a180b15143ab1778fde7ee004482649521277dbbf2085ad2a0fdc77a2ad7d246",
+      "size": 1244170
+    },
+    {
+      "id": "arrancador",
+      "name": "Arrancador",
+      "description": "Игровая библиотека",
+      "author": null,
+      "version": "0.1.4",
+      "keplerApiVersion": "^1.1.0",
+      "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/arrancador/icon.png",
+      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/arrancador-v0.1.4/arrancador-0.1.4.kext",
+      "sha256": "7e1784cf0e508c2b3b05173d3eeafa780204df6fb518ff01878732d9693eb465",
+      "size": 1426744
+    },
+    {
+      "id": "delphi",
+      "name": "Delphi",
+      "description": "Менеджер задач",
+      "author": null,
+      "version": "0.1.7",
+      "keplerApiVersion": "^1.1.0",
+      "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/delphi/icon.png",
+      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/delphi-v0.1.7/delphi-0.1.7.kext",
+      "sha256": "d7f19392775b4b6c4a68ce6eb7464484616fcbb3df84577ae57c1524d2b538f7",
+      "size": 1588538
+    },
+    {
+      "id": "eden",
+      "name": "Eden",
+      "description": "Заметки, дневник, мысли — TipTap editor + ARK objects",
+      "author": null,
+      "version": "0.1.12",
+      "keplerApiVersion": "^1.1.0",
+      "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/eden/icon.png",
+      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/eden-v0.1.12/eden-0.1.12.kext",
+      "sha256": "922ccafaa91266a6489881ebc11683a9dfed14c7c2c9fc36974a025a02f6cd2d",
+      "size": 3212294
+    },
+    {
+      "id": "horologion",
+      "name": "Horologion",
+      "description": "Трекер времени и pomodoro",
+      "author": null,
+      "version": "0.1.7",
+      "keplerApiVersion": "^1.1.0",
+      "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/horologion/icon.png",
+      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/horologion-v0.1.7/horologion-0.1.7.kext",
+      "sha256": "b927da52ce4f0a9665cfa834864a011e2ef3efacbf59644018e67ad6491ba9c2",
+      "size": 1525000
+    }
+  ]
+}
