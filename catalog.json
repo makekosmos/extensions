@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-06-12T17:25:25.832Z",
+  "updatedAt": "2026-06-14T22:01:00.800Z",
   "extensions": [
     {
       "id": "akasha",
@@ -43,24 +43,12 @@
       "name": "Eden",
       "description": "Заметки, дневник, мысли — TipTap editor + ARK objects",
       "author": null,
-      "version": "0.2.0",
+      "version": "0.2.1",
       "keplerApiVersion": "^1.1.0",
       "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/eden/icon.png",
-      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/eden-v0.2.0/eden-0.2.0.kext",
-      "sha256": "a3112418f107b9eb54d053785093ac2f841b3783c6dca9fc00e4376ecc2bfc00",
-      "size": 5129781
-    },
-    {
-      "id": "horologion",
-      "name": "Horologion",
-      "description": "Трекер времени и pomodoro",
-      "author": null,
-      "version": "0.1.7",
-      "keplerApiVersion": "^1.1.0",
-      "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/horologion/icon.png",
-      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/horologion-v0.1.7/horologion-0.1.7.kext",
-      "sha256": "b927da52ce4f0a9665cfa834864a011e2ef3efacbf59644018e67ad6491ba9c2",
-      "size": 1525000
+      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/eden-v0.2.1/eden-0.2.1.kext",
+      "sha256": "c4f7c34efea2a0e4d9a4723b83c0e12f6f7a23f4c06f147f8a4a51bda4cb6750",
+      "size": 3842792
     }
   ]
 }
