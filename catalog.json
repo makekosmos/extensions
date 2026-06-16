@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-06-16T00:37:24.202Z",
+  "updatedAt": "2026-06-16T13:01:55.496Z",
   "extensions": [
     {
       "id": "akasha",
@@ -31,23 +31,23 @@
       "name": "Delphi",
       "description": "Менеджер задач",
       "author": null,
-      "version": "0.1.7",
+      "version": "0.1.8",
       "keplerApiVersion": "^1.1.0",
       "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/delphi/icon.png",
-      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/delphi-v0.1.7/delphi-0.1.7.kext",
-      "sha256": "d7f19392775b4b6c4a68ce6eb7464484616fcbb3df84577ae57c1524d2b538f7",
-      "size": 1588538
+      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/delphi-v0.1.8/delphi-0.1.8.kext",
+      "sha256": "9f3e24debcdaf770ddbcc3283b977d201813bcfb7968a3ec3ece1dcddd195d6c",
+      "size": 1601813
     },
     {
       "id": "eden",
       "name": "Eden",
       "description": "Заметки, дневник, мысли — TipTap editor + ARK objects",
       "author": null,
-      "version": "0.2.3",
+      "version": "0.2.4",
       "keplerApiVersion": "^1.1.0",
       "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/eden/icon.png",
-      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/eden-v0.2.3/eden-0.2.3.kext",
-      "sha256": "1e4f1e66b6cca6680d3d1cdc5e7171be846eed6596130327ca35c7f45e9d9738",
+      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/eden-v0.2.4/eden-0.2.4.kext",
+      "sha256": "29fba07c1ddafbcf33f25d1f3a1349e9d421d5d3e052405b30d8933380142330",
       "size": 3791049
     }
   ]
