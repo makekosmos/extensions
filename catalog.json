@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-06-30T16:39:10.095Z",
+  "updatedAt": "2026-06-30T20:38:01.414Z",
   "extensions": [
     {
       "id": "akasha",
@@ -43,12 +43,12 @@
       "name": "Eden",
       "description": "Заметки, дневник, мысли — TipTap editor + ARK objects",
       "author": null,
-      "version": "0.4.0",
+      "version": "0.4.1",
       "keplerApiVersion": "^1.1.0",
       "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/eden/icon.png",
-      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/eden-v0.4.0/eden-0.4.0.kext",
-      "sha256": "368a37cefee1d9be807669b61384975394e2947a3b7e02611437914030c18b32",
-      "size": 13833740
+      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/eden-v0.4.1/eden-0.4.1.kext",
+      "sha256": "dba257604673542ec74183b00ae1eb7aeaf5208ed11961b3b3b45b4674ca545d",
+      "size": 11941526
     }
   ]
 }
