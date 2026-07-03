@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-07-03T10:27:37.734Z",
+  "updatedAt": "2026-07-03T13:41:30.885Z",
   "extensions": [
     {
       "id": "akasha",
@@ -19,12 +19,12 @@
       "name": "Arrancador",
       "description": "Игровая библиотека",
       "author": null,
-      "version": "0.1.4",
+      "version": "0.1.5",
       "keplerApiVersion": "^1.1.0",
       "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/arrancador/icon.png",
-      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/arrancador-v0.1.4/arrancador-0.1.4.kext",
-      "sha256": "7e1784cf0e508c2b3b05173d3eeafa780204df6fb518ff01878732d9693eb465",
-      "size": 1426744
+      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/arrancador-v0.1.5/arrancador-0.1.5.kext",
+      "sha256": "3443f338952b5c8272b88328fa4639077e5cc078f0a44f05bd5a58cfd97bb20e",
+      "size": 1439639
     },
     {
       "id": "delphi",
@@ -43,12 +43,12 @@
       "name": "Eden",
       "description": "Заметки, дневник, мысли — TipTap editor + ARK objects",
       "author": null,
-      "version": "0.5.0",
+      "version": "0.5.1",
       "keplerApiVersion": "^1.1.0",
       "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/eden/icon.png",
-      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/eden-v0.5.0/eden-0.5.0.kext",
-      "sha256": "16f7ce3eb0c2446a9da8b8f94a3a6e043f0237f4aa5402fb7cb2ece61bfc4d5f",
-      "size": 11972543
+      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/eden-v0.5.1/eden-0.5.1.kext",
+      "sha256": "56d3826c8edea4fe77e970ad5073c6f7c5833f144abf14e940d88722aff3ac0e",
+      "size": 11972401
     }
   ]
 }
