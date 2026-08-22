@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-07-12T21:16:35.578Z",
+  "updatedAt": "2026-08-22T23:20:23.094Z",
   "extensions": [
     {
       "id": "akasha",
@@ -15,16 +15,16 @@
       "size": 1244170
     },
     {
-      "id": "arrancador",
-      "name": "Arrancador",
+      "id": "arcadia",
+      "name": "Arcadia",
       "description": "Игровая библиотека",
       "author": null,
       "version": "0.1.5",
       "keplerApiVersion": "^1.1.0",
-      "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/arrancador/icon.png",
-      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/arrancador-v0.1.5/arrancador-0.1.5.kext",
-      "sha256": "3443f338952b5c8272b88328fa4639077e5cc078f0a44f05bd5a58cfd97bb20e",
-      "size": 1439639
+      "iconUrl": "https://github.com/makekosmos/extensions/releases/download/arcadia-v0.1.5/arcadia-0.1.5.icon.png",
+      "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/arcadia-v0.1.5/arcadia-0.1.5.kext",
+      "sha256": "c890b4ad91019418ebf1e42524690237f44b68ebe2c56e1bfa9ec4fe802817e9",
+      "size": 1201728
     },
     {
       "id": "delphi",
