@@ -23,3 +23,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Validate compatibility catalog
         run: node scripts/validate-catalog.mjs
+      - name: Run replacement and integrity tests
+        run: node --test scripts/validate-catalog.test.mjs
+      - name: Actionlint
+        uses: raven-actions/actionlint@3d39aea434753780c3b3d4a1a31c854b4dbf49d7 # v2
