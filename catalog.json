@@ -12,7 +12,8 @@
       "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/akasha/icon.svg",
       "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/akasha-v0.1.2/akasha-0.1.2.kext",
       "sha256": "a180b15143ab1778fde7ee004482649521277dbbf2085ad2a0fdc77a2ad7d246",
-      "size": 1244170
+      "size": 1244170,
+      "status": "legacy"
     },
     {
       "id": "arcadia",
@@ -24,7 +25,10 @@
       "iconUrl": "https://github.com/makekosmos/extensions/releases/download/arcadia-v0.1.5/arcadia-0.1.5.icon.png",
       "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/arcadia-v0.1.5/arcadia-0.1.5.kext",
       "sha256": "c890b4ad91019418ebf1e42524690237f44b68ebe2c56e1bfa9ec4fe802817e9",
-      "size": 1201728
+      "size": 1201728,
+      "status": "deprecated",
+      "replacementId": "com.kosmos.arcadia",
+      "deprecationReason": "Renamed package; retained only for compatibility migration."
     },
     {
       "id": "arrancador",
@@ -36,7 +40,10 @@
       "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/arrancador/icon.png",
       "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/arrancador-v0.1.5/arrancador-0.1.5.kext",
       "sha256": "3443f338952b5c8272b88328fa4639077e5cc078f0a44f05bd5a58cfd97bb20e",
-      "size": 1439639
+      "size": 1439639,
+      "status": "deprecated",
+      "replacementId": "com.kosmos.arcadia",
+      "deprecationReason": "Renamed package; retained only for compatibility migration."
     },
     {
       "id": "delphi",
@@ -48,7 +55,10 @@
       "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/delphi/icon.png",
       "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/delphi-v0.1.8/delphi-0.1.8.kext",
       "sha256": "9f3e24debcdaf770ddbcc3283b977d201813bcfb7968a3ec3ece1dcddd195d6c",
-      "size": 1601813
+      "size": 1601813,
+      "status": "deprecated",
+      "replacementId": "com.kosmos.agenda",
+      "deprecationReason": "Renamed package; retained only for compatibility migration."
     },
     {
       "id": "eden",
@@ -60,7 +70,13 @@
       "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/eden/icon.png",
       "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/eden-v0.5.4/eden-0.5.4.kext",
       "sha256": "6c0476e2263f0aa45ecbdb713cbf940aef72d0aa4ce81417bc9610ddb1fe7f70",
-      "size": 12013737
+      "size": 12013737,
+      "status": "deprecated",
+      "replacementId": "com.kosmos.memoria",
+      "deprecationReason": "Renamed package; retained only for compatibility migration."
     }
-  ]
+  ],
+  "status": "compatibility-only",
+  "supportedClientMax": "legacy",
+  "replacementPolicy": "Existing clients may resolve replacementId; new releases belong in Store and Package Index."
 }
