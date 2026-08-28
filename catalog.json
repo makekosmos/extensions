@@ -12,7 +12,8 @@
       "iconUrl": "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/akasha/icon.svg",
       "downloadUrl": "https://github.com/makekosmos/extensions/releases/download/akasha-v0.1.2/akasha-0.1.2.kext",
       "sha256": "a180b15143ab1778fde7ee004482649521277dbbf2085ad2a0fdc77a2ad7d246",
-      "size": 1244170
+      "size": 1244170,
+      "status": "legacy"
     },
     {
       "id": "arcadia",
