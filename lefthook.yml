@@ -1,0 +1,17 @@
+glob_matcher: doublestar
+
+pre-commit:
+  parallel: false
+  commands:
+    catalog:
+      run: node scripts/validate-catalog.mjs
+    catalog-tests:
+      run: node --test scripts/validate-catalog.test.mjs
+
+pre-push:
+  parallel: false
+  commands:
+    catalog:
+      run: node scripts/validate-catalog.mjs
+    catalog-tests:
+      run: node --test scripts/validate-catalog.test.mjs

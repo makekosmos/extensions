@@ -5,6 +5,8 @@ on:
     paths:
       - "catalog.json"
       - "scripts/**"
+      - "docs/**"
+      - "lefthook.yml"
       - ".github/workflows/**"
   push:
     branches: [main]

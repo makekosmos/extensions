@@ -5,7 +5,8 @@ clients. It is not the source of truth for current product discovery or
 installation.
 
 Legacy entries in `catalog.json` carry explicit deprecation and
-`replacementId` metadata:
+`replacementId` metadata. The exact migration contract is versioned in
+`catalog.json` and explained in [docs/migration-contract.md](docs/migration-contract.md):
 
 - Arrancador and the legacy Arcadia entry migrate to `com.kosmos.arcadia`;
 - Eden migrates to `com.kosmos.memoria`;
@@ -27,6 +28,14 @@ node scripts/validate-catalog.mjs
 node --test scripts/validate-catalog.test.mjs
 ```
 
-The final migration of existing `.kext` data, settings, and grants remains a
+The frozen client window, cutover checklist, and archive policy are in
+[docs/compatibility-cutover.md](docs/compatibility-cutover.md). The final
+migration of existing `.kext` data, settings, and grants remains a
 consumer/client release gate; this repository cannot prove that external
 upgrade path by itself.
+
+## Local hooks
+
+Install Lefthook for automatic pre-commit and pre-push checks, or run the two
+Node commands above directly. The checked-in `lefthook.yml` contains no
+secrets and only validates this compatibility feed.

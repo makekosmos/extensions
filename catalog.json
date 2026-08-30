@@ -78,5 +78,26 @@
   ],
   "status": "compatibility-only",
   "supportedClientMax": "legacy",
-  "replacementPolicy": "Existing clients may resolve replacementId; new releases belong in Store and Package Index."
+  "replacementPolicy": "Existing clients may resolve replacementId; new releases belong in Store and Package Index.",
+  "archive": {
+    "state": "frozen",
+    "frozenAt": "2026-08-30",
+    "readOnly": true,
+    "newArtifacts": false,
+    "retireAfter": "consumer-cutover",
+    "sourceOfTruth": "signed-store-and-package-index"
+  },
+  "replacements": {
+    "arcadia": "com.kosmos.arcadia",
+    "arrancador": "com.kosmos.arcadia",
+    "eden": "com.kosmos.memoria",
+    "delphi": "com.kosmos.agenda"
+  },
+  "migrationContract": {
+    "version": 1,
+    "persistedIds": "Map the legacy extension id to replacements before opening or writing any record.",
+    "settings": "Copy settings under the replacement id, preserve unknown keys, and keep the legacy namespace read-only until the copy is durable.",
+    "grants": "Rebind grants to the replacement id only after validating each scope against the replacement manifest; deny unknown scopes and never broaden access.",
+    "cutover": "Legacy clients use this feed only for upgrade resolution; discovery and install/update use the signed Store and Package Index."
+  }
 }
