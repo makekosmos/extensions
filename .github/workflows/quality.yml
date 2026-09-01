@@ -1,15 +1,7 @@
 name: Catalog quality
 
 on:
-  pull_request:
-    paths:
-      - "catalog.json"
-      - "scripts/**"
-      - "docs/**"
-      - "lefthook.yml"
-      - ".github/workflows/**"
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read

@@ -19,7 +19,7 @@ Package Index. Do not publish new first-party artifacts here.
 
 ## Validation
 
-Catalog CI rejects duplicate identities, malformed metadata, non-HTTPS or
+The local catalog gate rejects duplicate identities, malformed metadata, non-HTTPS or
 invalid artifact integrity values, missing deprecation reasons/replacements, and
 replacement cycles:
 
@@ -33,6 +33,9 @@ The frozen client window, cutover checklist, and archive policy are in
 migration of existing `.kext` data, settings, and grants remains a
 consumer/client release gate; this repository cannot prove that external
 upgrade path by itself.
+
+The GitHub workflow is manual-only to avoid spending Actions quota on this
+compatibility-only repository; it replays the same local commands on demand.
 
 ## Local hooks
 
