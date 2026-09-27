@@ -34,6 +34,7 @@ export function validateCatalog(catalog) {
     ids.add(entry.id);
     if (typeof entry.name !== "string" || !entry.name.trim() || typeof entry.description !== "string" || !entry.description.trim()) throw new Error(`${entry.id}: name/description required`);
     if (!/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$/.test(entry.version)) throw new Error(`${entry.id}: invalid semver`);
+    if (typeof entry.keplerApiVersion !== "string" || !/^\^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.test(entry.keplerApiVersion)) throw new Error(`${entry.id}: invalid keplerApiVersion range`);
     let iconUrl;
     let downloadUrl;
     try {
