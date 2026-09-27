@@ -16,12 +16,14 @@ test("accepts frozen compatibility catalog", () => assert.equal(validateCatalog(
 test("accepts semver build metadata", () => {
   const c = copy();
   c.extensions[0].version = "1.2.3+build.7";
+  c.extensions[0].downloadUrl = "https://github.com/makekosmos/extensions/releases/download/akasha-v1.2.3+build.7/akasha-1.2.3+build.7.kext";
   assert.equal(validateCatalog(c), true);
 });
 
 test("accepts leap-day archive.frozenAt", () => {
   const c = copy();
   c.archive.frozenAt = "2024-02-29";
+  c.updatedAt = "2024-02-29T00:00:00.000Z";
   assert.equal(validateCatalog(c), true);
 });
 
@@ -36,6 +38,19 @@ test("accepts string or absent author", () => {
   c.extensions[0].author = "Kosmos";
   assert.equal(validateCatalog(c), true);
   delete c.extensions[0].author;
+  assert.equal(validateCatalog(c), true);
+});
+
+test("accepts updatedAt on the archive.frozenAt date", () => {
+  const c = copy();
+  c.updatedAt = "2026-08-30T23:59:59.999Z";
+  assert.equal(validateCatalog(c), true);
+});
+
+test("accepts format characters next to visible text", () => {
+  const c = copy();
+  c.extensions[0].name = "​Akasha";
+  c.extensions[0].description = "Читалка​";
   assert.equal(validateCatalog(c), true);
 });
 
@@ -107,6 +122,19 @@ for (const [name, mutate, pattern] of [
   ["non-default downloadUrl port", (c) => { c.extensions[1].downloadUrl = "https://github.com:8443/a/b.kext"; }, /HTTPS/],
   ["non-string author", (c) => { c.extensions[0].author = 42; }, /author/],
   ["blank author", (c) => { c.extensions[1].author = " "; }, /author/],
+  ["missing updatedAt", (c) => { delete c.updatedAt; }, /updatedAt/],
+  ["non-timestamp updatedAt", (c) => { c.updatedAt = "2026-08-22"; }, /updatedAt/],
+  ["non-canonical updatedAt", (c) => { c.updatedAt = "2026-08-22T23:21:15Z"; }, /updatedAt/],
+  ["impossible updatedAt date", (c) => { c.updatedAt = "2026-02-30T00:00:00.000Z"; }, /updatedAt/],
+  ["updatedAt after archive.frozenAt", (c) => { c.updatedAt = "2026-08-31T00:00:00.000Z"; }, /updatedAt/],
+  ["invisible name", (c) => { c.extensions[0].name = "​"; }, /name\/description/],
+  ["control-only description", (c) => { c.extensions[0].description = ""; }, /name\/description/],
+  ["invisible deprecationReason", (c) => { c.extensions[1].deprecationReason = "​"; }, /deprecationReason/],
+  ["invisible contract clause", (c) => { c.migrationContract.grants = "​"; }, /migration contract/],
+  ["invisible author", (c) => { c.extensions[0].author = "​"; }, /author/],
+  ["artifact from another entry", (c) => { c.extensions[4].downloadUrl = "https://github.com/makekosmos/extensions/releases/download/delphi-v0.1.8/delphi-0.1.8.kext"; }, /release artifact/],
+  ["version without matching artifact", (c) => { c.extensions[0].version = "9.9.9"; }, /release artifact/],
+  ["artifact filename lying about version", (c) => { c.extensions[4].downloadUrl = "https://github.com/makekosmos/extensions/releases/download/eden-v0.5.4/eden-9.9.9.kext"; }, /release artifact/],
 ]) {
   test(name, () => assert.throws(() => {
     const c = copy();
