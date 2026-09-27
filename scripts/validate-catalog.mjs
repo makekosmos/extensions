@@ -12,7 +12,8 @@ export function validateCatalog(catalog) {
   if (!archive || archive.state !== "frozen" || archive.readOnly !== true || archive.newArtifacts !== false || archive.retireAfter !== "consumer-cutover" || archive.sourceOfTruth !== "signed-store-and-package-index") {
     throw new Error("catalog must declare a frozen, read-only archive and consumer cutover");
   }
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(archive.frozenAt) || Number.isNaN(Date.parse(`${archive.frozenAt}T00:00:00Z`))) {
+  const frozenAtMs = Date.parse(`${archive.frozenAt}T00:00:00Z`);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(archive.frozenAt) || Number.isNaN(frozenAtMs) || new Date(frozenAtMs).toISOString().slice(0, 10) !== archive.frozenAt) {
     throw new Error("archive.frozenAt must be an ISO date");
   }
   const replacements = catalog.replacements;
@@ -33,6 +34,7 @@ export function validateCatalog(catalog) {
     if (!entry || typeof entry.id !== "string" || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.id) || ids.has(entry.id)) throw new Error("duplicate or invalid extension id");
     ids.add(entry.id);
     if (typeof entry.name !== "string" || !entry.name.trim() || typeof entry.description !== "string" || !entry.description.trim()) throw new Error(`${entry.id}: name/description required`);
+    if (entry.author != null && (typeof entry.author !== "string" || !entry.author.trim())) throw new Error(`${entry.id}: author must be null or a non-empty string`);
     if (!/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$/.test(entry.version)) throw new Error(`${entry.id}: invalid semver`);
     if (typeof entry.keplerApiVersion !== "string" || !/^\^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.test(entry.keplerApiVersion)) throw new Error(`${entry.id}: invalid keplerApiVersion range`);
     let iconUrl;
@@ -43,13 +45,13 @@ export function validateCatalog(catalog) {
     } catch {
       throw new Error(`${entry.id}: invalid artifact URL`);
     }
-    if (iconUrl.protocol !== "https:" || downloadUrl.protocol !== "https:" || iconUrl.username || iconUrl.password || downloadUrl.username || downloadUrl.password || iconUrl.search || iconUrl.hash || downloadUrl.search || downloadUrl.hash) {
+    if (iconUrl.protocol !== "https:" || downloadUrl.protocol !== "https:" || iconUrl.username || iconUrl.password || downloadUrl.username || downloadUrl.password || iconUrl.port || downloadUrl.port || iconUrl.search || iconUrl.hash || downloadUrl.search || downloadUrl.hash) {
       throw new Error(`${entry.id}: HTTPS URLs required`);
     }
     if (!/^(github\.com|raw\.githubusercontent\.com)$/i.test(iconUrl.hostname) || !/\.(?:png|svg)$/i.test(iconUrl.pathname)) {
       throw new Error(`${entry.id}: iconUrl must be a GitHub image artifact`);
     }
-    if (!/^(github\.com|raw\.githubusercontent\.com)$/i.test(downloadUrl.hostname) || !downloadUrl.pathname.endsWith(".kext")) {
+    if (!/^(github\.com|raw\.githubusercontent\.com)$/i.test(downloadUrl.hostname) || !/\.kext$/i.test(downloadUrl.pathname)) {
       throw new Error(`${entry.id}: downloadUrl must be a GitHub .kext artifact`);
     }
     if (!/^[a-f0-9]{64}$/.test(entry.sha256) || !Number.isSafeInteger(entry.size) || entry.size <= 0) throw new Error(`${entry.id}: invalid artifact integrity`);
