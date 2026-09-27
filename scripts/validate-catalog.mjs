@@ -18,8 +18,10 @@ export function validateCatalog(catalog) {
   const replacements = catalog.replacements;
   const contract = catalog.migrationContract;
   if (!replacements || typeof replacements !== "object" || contract?.version !== 1 ||
-      typeof contract.persistedIds !== "string" || typeof contract.settings !== "string" ||
-      typeof contract.grants !== "string" || typeof contract.cutover !== "string") {
+      typeof contract.persistedIds !== "string" || !contract.persistedIds.trim() ||
+      typeof contract.settings !== "string" || !contract.settings.trim() ||
+      typeof contract.grants !== "string" || !contract.grants.trim() ||
+      typeof contract.cutover !== "string" || !contract.cutover.trim()) {
     throw new Error("catalog must declare the versioned migration contract");
   }
   if (!Array.isArray(entries) || entries.length === 0) throw new Error("extensions must be a non-empty array");
@@ -28,9 +30,9 @@ export function validateCatalog(catalog) {
   const edges = new Map();
   const replacementTargets = new Set();
   for (const entry of entries) {
-    if (!entry || typeof entry.id !== "string" || ids.has(entry.id)) throw new Error("duplicate or invalid extension id");
+    if (!entry || typeof entry.id !== "string" || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.id) || ids.has(entry.id)) throw new Error("duplicate or invalid extension id");
     ids.add(entry.id);
-    if (typeof entry.name !== "string" || typeof entry.description !== "string") throw new Error(`${entry.id}: name/description required`);
+    if (typeof entry.name !== "string" || !entry.name.trim() || typeof entry.description !== "string" || !entry.description.trim()) throw new Error(`${entry.id}: name/description required`);
     if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(entry.version)) throw new Error(`${entry.id}: invalid semver`);
     let iconUrl;
     let downloadUrl;

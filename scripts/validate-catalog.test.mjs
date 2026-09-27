@@ -19,6 +19,10 @@ test("uses one canonical replacement for each renamed app", () => {
 
 for (const [name, mutate, pattern] of [
   ["duplicate identities", (c) => c.extensions.push(structuredClone(c.extensions[0])), /duplicate/],
+  ["blank identity", (c) => { c.extensions[0].id = "   "; }, /invalid extension id/],
+  ["blank name", (c) => { c.extensions[0].name = ""; }, /name\/description/],
+  ["blank description", (c) => { c.extensions[0].description = " "; }, /name\/description/],
+  ["blank contract clause", (c) => { c.migrationContract.grants = ""; }, /migration contract/],
   ["bad artifact URL", (c) => { c.extensions[0].downloadUrl = "http://example.invalid/a.kext"; }, /HTTPS/],
   ["untrusted icon URL", (c) => { c.extensions[0].iconUrl = "https://example.invalid/icon.svg"; }, /iconUrl/],
   ["bad artifact hash", (c) => { c.extensions[0].sha256 = "bad"; }, /integrity/],
