@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { existsSync, realpathSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-const hasVisibleText = (value) => typeof value === "string" && /[^\s\p{C}]/u.test(value);
+const hasVisibleText = (value) => typeof value === "string" && /[^\s\p{C}\p{M}]/u.test(value);
 
 export function validateCatalog(catalog) {
   const entries = catalog?.extensions;
@@ -53,13 +53,13 @@ export function validateCatalog(catalog) {
     if (iconUrl.protocol !== "https:" || downloadUrl.protocol !== "https:" || iconUrl.username || iconUrl.password || downloadUrl.username || downloadUrl.password || iconUrl.port || downloadUrl.port || iconUrl.search || iconUrl.hash || downloadUrl.search || downloadUrl.hash) {
       throw new Error(`${entry.id}: HTTPS URLs required`);
     }
-    if (!/^(github\.com|raw\.githubusercontent\.com)$/i.test(iconUrl.hostname) || !/\.(?:png|svg)$/i.test(iconUrl.pathname)) {
+    if (!/^(github\.com|raw\.githubusercontent\.com)$/i.test(iconUrl.hostname) || !iconUrl.pathname.startsWith("/makekosmos/extensions/") || !/\.(?:png|svg)$/i.test(iconUrl.pathname)) {
       throw new Error(`${entry.id}: iconUrl must be a GitHub image artifact`);
     }
-    if (!/^(github\.com|raw\.githubusercontent\.com)$/i.test(downloadUrl.hostname) || !/\.kext$/i.test(downloadUrl.pathname)) {
+    if (downloadUrl.hostname !== "github.com" || !downloadUrl.pathname.startsWith("/makekosmos/extensions/releases/download/") || !/\.kext$/i.test(downloadUrl.pathname)) {
       throw new Error(`${entry.id}: downloadUrl must be a GitHub .kext artifact`);
     }
-    if (!downloadUrl.pathname.toLowerCase().endsWith(`/${entry.id}-v${entry.version}/${entry.id}-${entry.version}.kext`)) {
+    if (!downloadUrl.pathname.slice(0, -".kext".length).endsWith(`/${entry.id}-v${entry.version}/${entry.id}-${entry.version}`)) {
       throw new Error(`${entry.id}: downloadUrl must be the ${entry.id}-v${entry.version} release artifact`);
     }
     if (!/^[a-f0-9]{64}$/.test(entry.sha256) || !Number.isSafeInteger(entry.size) || entry.size <= 0) throw new Error(`${entry.id}: invalid artifact integrity`);
