@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { readFile } from "node:fs/promises";
-import path from "node:path";
+import { existsSync, realpathSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 export function validateCatalog(catalog) {
@@ -18,8 +18,10 @@ export function validateCatalog(catalog) {
   const replacements = catalog.replacements;
   const contract = catalog.migrationContract;
   if (!replacements || typeof replacements !== "object" || contract?.version !== 1 ||
-      typeof contract.persistedIds !== "string" || typeof contract.settings !== "string" ||
-      typeof contract.grants !== "string" || typeof contract.cutover !== "string") {
+      typeof contract.persistedIds !== "string" || !contract.persistedIds.trim() ||
+      typeof contract.settings !== "string" || !contract.settings.trim() ||
+      typeof contract.grants !== "string" || !contract.grants.trim() ||
+      typeof contract.cutover !== "string" || !contract.cutover.trim()) {
     throw new Error("catalog must declare the versioned migration contract");
   }
   if (!Array.isArray(entries) || entries.length === 0) throw new Error("extensions must be a non-empty array");
@@ -28,10 +30,11 @@ export function validateCatalog(catalog) {
   const edges = new Map();
   const replacementTargets = new Set();
   for (const entry of entries) {
-    if (!entry || typeof entry.id !== "string" || ids.has(entry.id)) throw new Error("duplicate or invalid extension id");
+    if (!entry || typeof entry.id !== "string" || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.id) || ids.has(entry.id)) throw new Error("duplicate or invalid extension id");
     ids.add(entry.id);
-    if (typeof entry.name !== "string" || typeof entry.description !== "string") throw new Error(`${entry.id}: name/description required`);
-    if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(entry.version)) throw new Error(`${entry.id}: invalid semver`);
+    if (typeof entry.name !== "string" || !entry.name.trim() || typeof entry.description !== "string" || !entry.description.trim()) throw new Error(`${entry.id}: name/description required`);
+    if (!/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$/.test(entry.version)) throw new Error(`${entry.id}: invalid semver`);
+    if (typeof entry.keplerApiVersion !== "string" || !/^\^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.test(entry.keplerApiVersion)) throw new Error(`${entry.id}: invalid keplerApiVersion range`);
     let iconUrl;
     let downloadUrl;
     try {
@@ -89,7 +92,8 @@ async function main() {
   console.log(`Validated ${catalog.extensions.length} compatibility entries.`);
 }
 
-if (path.resolve(process.argv[1] || "") === fileURLToPath(import.meta.url)) main().catch((error) => {
+const invoked = process.argv[1];
+if (invoked && existsSync(invoked) && realpathSync(invoked) === realpathSync(fileURLToPath(import.meta.url))) main().catch((error) => {
   console.error(error.message);
   process.exitCode = 1;
 });

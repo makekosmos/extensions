@@ -1,12 +1,31 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { mkdtempSync, symlinkSync } from "node:fs";
 import { readFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { validateCatalog } from "./validate-catalog.mjs";
 
 const source = JSON.parse(await readFile(new URL("../catalog.json", import.meta.url), "utf8"));
 const copy = () => structuredClone(source);
 
 test("accepts frozen compatibility catalog", () => assert.equal(validateCatalog(source), true));
+
+test("accepts semver build metadata", () => {
+  const c = copy();
+  c.extensions[0].version = "1.2.3+build.7";
+  assert.equal(validateCatalog(c), true);
+});
+
+test("runs validator when invoked through a symlink", () => {
+  const dir = mkdtempSync(path.join(tmpdir(), "validate-catalog-"));
+  const link = path.join(dir, "validate-catalog.mjs");
+  symlinkSync(fileURLToPath(new URL("./validate-catalog.mjs", import.meta.url)), link);
+  const output = execFileSync(process.execPath, [link], { encoding: "utf8" });
+  assert.match(output, /Validated 5 compatibility entries/);
+});
 
 test("uses one canonical replacement for each renamed app", () => {
   assert.deepEqual(source.replacements, {
@@ -19,6 +38,15 @@ test("uses one canonical replacement for each renamed app", () => {
 
 for (const [name, mutate, pattern] of [
   ["duplicate identities", (c) => c.extensions.push(structuredClone(c.extensions[0])), /duplicate/],
+  ["blank identity", (c) => { c.extensions[0].id = "   "; }, /invalid extension id/],
+  ["blank name", (c) => { c.extensions[0].name = ""; }, /name\/description/],
+  ["blank description", (c) => { c.extensions[0].description = " "; }, /name\/description/],
+  ["blank contract clause", (c) => { c.migrationContract.grants = ""; }, /migration contract/],
+  ["version with leading zeros", (c) => { c.extensions[0].version = "01.2.3"; }, /semver/],
+  ["version with empty prerelease identifier", (c) => { c.extensions[0].version = "1.2.3-.."; }, /semver/],
+  ["missing keplerApiVersion", (c) => { delete c.extensions[0].keplerApiVersion; }, /keplerApiVersion/],
+  ["keplerApiVersion without caret range", (c) => { c.extensions[0].keplerApiVersion = "1.1.0"; }, /keplerApiVersion/],
+  ["non-string keplerApiVersion", (c) => { c.extensions[0].keplerApiVersion = 11; }, /keplerApiVersion/],
   ["bad artifact URL", (c) => { c.extensions[0].downloadUrl = "http://example.invalid/a.kext"; }, /HTTPS/],
   ["untrusted icon URL", (c) => { c.extensions[0].iconUrl = "https://example.invalid/icon.svg"; }, /iconUrl/],
   ["bad artifact hash", (c) => { c.extensions[0].sha256 = "bad"; }, /integrity/],
