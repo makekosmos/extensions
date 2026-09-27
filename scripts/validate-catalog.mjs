@@ -18,7 +18,7 @@ export function validateCatalog(catalog) {
   }
   const replacements = catalog.replacements;
   const contract = catalog.migrationContract;
-  if (!replacements || typeof replacements !== "object" || contract?.version !== 1 ||
+  if (!replacements || typeof replacements !== "object" || Array.isArray(replacements) || contract?.version !== 1 ||
       typeof contract.persistedIds !== "string" || !contract.persistedIds.trim() ||
       typeof contract.settings !== "string" || !contract.settings.trim() ||
       typeof contract.grants !== "string" || !contract.grants.trim() ||
@@ -82,9 +82,6 @@ export function validateCatalog(catalog) {
     if (ids.has(replacement) || edges.has(replacement)) throw new Error(`${id}: replacement chain must terminate outside the legacy catalog`);
   }
   if (replacementTargets.size === 0) throw new Error("catalog must contain at least one replacement");
-  if (entries.some((entry) => ["active", "current", "published"].includes(entry.status))) {
-    throw new Error("active entries are forbidden in compatibility-only catalog");
-  }
   return true;
 }
 
