@@ -1,6 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { mkdtempSync, symlinkSync } from "node:fs";
 import { readFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { validateCatalog } from "./validate-catalog.mjs";
 
 const source = JSON.parse(await readFile(new URL("../catalog.json", import.meta.url), "utf8"));
@@ -12,6 +17,14 @@ test("accepts semver build metadata", () => {
   const c = copy();
   c.extensions[0].version = "1.2.3+build.7";
   assert.equal(validateCatalog(c), true);
+});
+
+test("runs validator when invoked through a symlink", () => {
+  const dir = mkdtempSync(path.join(tmpdir(), "validate-catalog-"));
+  const link = path.join(dir, "validate-catalog.mjs");
+  symlinkSync(fileURLToPath(new URL("./validate-catalog.mjs", import.meta.url)), link);
+  const output = execFileSync(process.execPath, [link], { encoding: "utf8" });
+  assert.match(output, /Validated 5 compatibility entries/);
 });
 
 test("uses one canonical replacement for each renamed app", () => {

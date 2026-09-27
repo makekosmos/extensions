@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { readFile } from "node:fs/promises";
-import path from "node:path";
+import { existsSync, realpathSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 export function validateCatalog(catalog) {
@@ -92,7 +92,8 @@ async function main() {
   console.log(`Validated ${catalog.extensions.length} compatibility entries.`);
 }
 
-if (path.resolve(process.argv[1] || "") === fileURLToPath(import.meta.url)) main().catch((error) => {
+const invoked = process.argv[1];
+if (invoked && existsSync(invoked) && realpathSync(invoked) === realpathSync(fileURLToPath(import.meta.url))) main().catch((error) => {
   console.error(error.message);
   process.exitCode = 1;
 });
