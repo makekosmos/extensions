@@ -4,9 +4,11 @@ This repository is a frozen, compatibility-only catalog for legacy `.kext`
 clients. It is not the source of truth for current product discovery or
 installation.
 
-Legacy entries in `catalog.json` carry explicit deprecation and
-`replacementId` metadata. The exact migration contract is versioned in
-`catalog.json` and explained in [docs/migration-contract.md](docs/migration-contract.md):
+Deprecated entries in `catalog.json` carry explicit `replacementId` and
+`deprecationReason` metadata; entries without a current replacement remain
+plain `legacy` compatibility records. The exact migration contract is
+versioned in `catalog.json` and explained in
+[docs/migration-contract.md](docs/migration-contract.md):
 
 - Arrancador and the legacy Arcadia entry migrate to `com.kosmos.arcadia`;
 - Eden migrates to `com.kosmos.memoria`;

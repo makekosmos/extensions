@@ -54,6 +54,19 @@ test("accepts format characters next to visible text", () => {
   assert.equal(validateCatalog(c), true);
 });
 
+test("accepts combining marks next to visible text", () => {
+  const c = copy();
+  c.extensions[0].name = "Café";
+  assert.equal(validateCatalog(c), true);
+});
+
+test("accepts uppercase prerelease in the release artifact path", () => {
+  const c = copy();
+  c.extensions[0].version = "0.1.2-RC";
+  c.extensions[0].downloadUrl = "https://github.com/makekosmos/extensions/releases/download/akasha-v0.1.2-RC/akasha-0.1.2-RC.kext";
+  assert.equal(validateCatalog(c), true);
+});
+
 test("runs validator when invoked through a symlink", () => {
   const dir = mkdtempSync(path.join(tmpdir(), "validate-catalog-"));
   const link = path.join(dir, "validate-catalog.mjs");
@@ -128,6 +141,10 @@ for (const [name, mutate, pattern] of [
   ["impossible updatedAt date", (c) => { c.updatedAt = "2026-02-30T00:00:00.000Z"; }, /updatedAt/],
   ["updatedAt after archive.frozenAt", (c) => { c.updatedAt = "2026-08-31T00:00:00.000Z"; }, /updatedAt/],
   ["invisible name", (c) => { c.extensions[0].name = "​"; }, /name\/description/],
+  ["variation-selector name", (c) => { c.extensions[0].name = "️️️"; }, /name\/description/],
+  ["combining-mark description", (c) => { c.extensions[0].description = "̀́"; }, /name\/description/],
+  ["variation-selector deprecationReason", (c) => { c.extensions[1].deprecationReason = "️"; }, /deprecationReason/],
+  ["variation-selector contract clause", (c) => { c.migrationContract.grants = "️"; }, /migration contract/],
   ["control-only description", (c) => { c.extensions[0].description = ""; }, /name\/description/],
   ["invisible deprecationReason", (c) => { c.extensions[1].deprecationReason = "​"; }, /deprecationReason/],
   ["invisible contract clause", (c) => { c.migrationContract.grants = "​"; }, /migration contract/],
@@ -135,6 +152,12 @@ for (const [name, mutate, pattern] of [
   ["artifact from another entry", (c) => { c.extensions[4].downloadUrl = "https://github.com/makekosmos/extensions/releases/download/delphi-v0.1.8/delphi-0.1.8.kext"; }, /release artifact/],
   ["version without matching artifact", (c) => { c.extensions[0].version = "9.9.9"; }, /release artifact/],
   ["artifact filename lying about version", (c) => { c.extensions[4].downloadUrl = "https://github.com/makekosmos/extensions/releases/download/eden-v0.5.4/eden-9.9.9.kext"; }, /release artifact/],
+  ["artifact tag with drifted case", (c) => { c.extensions[4].downloadUrl = "https://github.com/makekosmos/extensions/releases/download/eden-V0.5.4/eden-0.5.4.kext"; }, /release artifact/],
+  ["artifact filename with drifted case", (c) => { c.extensions[4].downloadUrl = "https://github.com/makekosmos/extensions/releases/download/eden-v0.5.4/EDEN-0.5.4.kext"; }, /release artifact/],
+  ["artifact on a foreign repository", (c) => { c.extensions[0].downloadUrl = "https://github.com/evil/repo/releases/download/akasha-v0.1.2/akasha-0.1.2.kext"; }, /kext artifact/],
+  ["artifact served as a blob page", (c) => { c.extensions[0].downloadUrl = "https://github.com/makekosmos/extensions/blob/main/akasha-v0.1.2/akasha-0.1.2.kext"; }, /kext artifact/],
+  ["artifact on raw.githubusercontent.com", (c) => { c.extensions[0].downloadUrl = "https://raw.githubusercontent.com/makekosmos/extensions/main/akasha-v0.1.2/akasha-0.1.2.kext"; }, /kext artifact/],
+  ["icon on a foreign repository", (c) => { c.extensions[0].iconUrl = "https://raw.githubusercontent.com/evil/repo/main/extensions/akasha/icon.svg"; }, /iconUrl/],
 ]) {
   test(name, () => assert.throws(() => {
     const c = copy();
