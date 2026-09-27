@@ -33,7 +33,7 @@ export function validateCatalog(catalog) {
     if (!entry || typeof entry.id !== "string" || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.id) || ids.has(entry.id)) throw new Error("duplicate or invalid extension id");
     ids.add(entry.id);
     if (typeof entry.name !== "string" || !entry.name.trim() || typeof entry.description !== "string" || !entry.description.trim()) throw new Error(`${entry.id}: name/description required`);
-    if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(entry.version)) throw new Error(`${entry.id}: invalid semver`);
+    if (!/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$/.test(entry.version)) throw new Error(`${entry.id}: invalid semver`);
     let iconUrl;
     let downloadUrl;
     try {

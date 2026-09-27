@@ -8,6 +8,12 @@ const copy = () => structuredClone(source);
 
 test("accepts frozen compatibility catalog", () => assert.equal(validateCatalog(source), true));
 
+test("accepts semver build metadata", () => {
+  const c = copy();
+  c.extensions[0].version = "1.2.3+build.7";
+  assert.equal(validateCatalog(c), true);
+});
+
 test("uses one canonical replacement for each renamed app", () => {
   assert.deepEqual(source.replacements, {
     arcadia: "com.kosmos.arcadia",
@@ -23,6 +29,8 @@ for (const [name, mutate, pattern] of [
   ["blank name", (c) => { c.extensions[0].name = ""; }, /name\/description/],
   ["blank description", (c) => { c.extensions[0].description = " "; }, /name\/description/],
   ["blank contract clause", (c) => { c.migrationContract.grants = ""; }, /migration contract/],
+  ["version with leading zeros", (c) => { c.extensions[0].version = "01.2.3"; }, /semver/],
+  ["version with empty prerelease identifier", (c) => { c.extensions[0].version = "1.2.3-.."; }, /semver/],
   ["bad artifact URL", (c) => { c.extensions[0].downloadUrl = "http://example.invalid/a.kext"; }, /HTTPS/],
   ["untrusted icon URL", (c) => { c.extensions[0].iconUrl = "https://example.invalid/icon.svg"; }, /iconUrl/],
   ["bad artifact hash", (c) => { c.extensions[0].sha256 = "bad"; }, /integrity/],
