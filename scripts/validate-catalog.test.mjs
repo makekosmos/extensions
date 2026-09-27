@@ -19,6 +19,26 @@ test("accepts semver build metadata", () => {
   assert.equal(validateCatalog(c), true);
 });
 
+test("accepts leap-day archive.frozenAt", () => {
+  const c = copy();
+  c.archive.frozenAt = "2024-02-29";
+  assert.equal(validateCatalog(c), true);
+});
+
+test("accepts uppercase .KEXT artifact extension", () => {
+  const c = copy();
+  c.extensions[1].downloadUrl = "https://github.com/makekosmos/extensions/releases/download/arcadia-v0.1.5/arcadia-0.1.5.KEXT";
+  assert.equal(validateCatalog(c), true);
+});
+
+test("accepts string or absent author", () => {
+  const c = copy();
+  c.extensions[0].author = "Kosmos";
+  assert.equal(validateCatalog(c), true);
+  delete c.extensions[0].author;
+  assert.equal(validateCatalog(c), true);
+});
+
 test("runs validator when invoked through a symlink", () => {
   const dir = mkdtempSync(path.join(tmpdir(), "validate-catalog-"));
   const link = path.join(dir, "validate-catalog.mjs");
@@ -62,6 +82,11 @@ for (const [name, mutate, pattern] of [
   ["missing migration contract", (c) => { delete c.migrationContract.grants; }, /migration contract/],
   ["replacement mapping drift", (c) => { c.replacements.eden = "com.kosmos.agenda"; }, /replacementId/],
   ["active entry in compatibility feed", (c) => { c.extensions[0].status = "active"; }, /legacy or deprecated/],
+  ["impossible archive.frozenAt date", (c) => { c.archive.frozenAt = "2026-02-30"; }, /ISO date/],
+  ["non-default iconUrl port", (c) => { c.extensions[0].iconUrl = "https://github.com:8080/makekosmos/extensions/main/extensions/akasha/icon.svg"; }, /HTTPS/],
+  ["non-default downloadUrl port", (c) => { c.extensions[1].downloadUrl = "https://github.com:8443/a/b.kext"; }, /HTTPS/],
+  ["non-string author", (c) => { c.extensions[0].author = 42; }, /author/],
+  ["blank author", (c) => { c.extensions[1].author = " "; }, /author/],
 ]) {
   test(name, () => assert.throws(() => {
     const c = copy();
