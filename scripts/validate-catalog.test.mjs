@@ -47,6 +47,26 @@ test("runs validator when invoked through a symlink", () => {
   assert.match(output, /Validated 5 compatibility entries/);
 });
 
+test("rejects replacement map given as an array", () => {
+  const c = copy();
+  c.extensions = [{
+    id: "0",
+    name: "X",
+    description: "Y",
+    version: "1.0.0",
+    keplerApiVersion: "^1.0.0",
+    iconUrl: "https://github.com/a/b.png",
+    downloadUrl: "https://github.com/a/b.kext",
+    sha256: "a".repeat(64),
+    size: 5,
+    status: "deprecated",
+    replacementId: "com.kosmos.x",
+    deprecationReason: "r",
+  }];
+  c.replacements = ["com.kosmos.x"];
+  assert.throws(() => validateCatalog(c), /migration contract/);
+});
+
 test("uses one canonical replacement for each renamed app", () => {
   assert.deepEqual(source.replacements, {
     arcadia: "com.kosmos.arcadia",
