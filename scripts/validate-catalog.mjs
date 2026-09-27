@@ -50,16 +50,25 @@ export function validateCatalog(catalog) {
     } catch {
       throw new Error(`${entry.id}: invalid artifact URL`);
     }
+    if (/[\u0000-\u0020\u007f]/.test(entry.iconUrl) || /[\u0000-\u0020\u007f]/.test(entry.downloadUrl)) {
+      throw new Error(`${entry.id}: artifact URLs cannot contain whitespace or control characters`);
+    }
     if (iconUrl.protocol !== "https:" || downloadUrl.protocol !== "https:" || iconUrl.username || iconUrl.password || downloadUrl.username || downloadUrl.password || iconUrl.port || downloadUrl.port || iconUrl.search || iconUrl.hash || downloadUrl.search || downloadUrl.hash) {
       throw new Error(`${entry.id}: HTTPS URLs required`);
     }
-    if (!/^(github\.com|raw\.githubusercontent\.com)$/i.test(iconUrl.hostname) || !iconUrl.pathname.startsWith("/makekosmos/extensions/") || !/\.(?:png|svg)$/i.test(iconUrl.pathname)) {
+    if ((iconUrl.hostname !== "github.com" && iconUrl.hostname !== "raw.githubusercontent.com") || !/\.(?:png|svg)$/i.test(iconUrl.pathname)) {
       throw new Error(`${entry.id}: iconUrl must be a GitHub image artifact`);
+    }
+    const iconStem = iconUrl.pathname.replace(/\.(?:png|svg)$/i, "");
+    const iconTreeStem = new RegExp(`^/makekosmos/extensions/${iconUrl.hostname === "github.com" ? "raw/" : ""}[^/]+/extensions/${entry.id}/icon$`);
+    const iconAssetStem = `/makekosmos/extensions/releases/download/${entry.id}-v${entry.version}/${entry.id}-${entry.version}.icon`;
+    if (!iconTreeStem.test(iconStem) && (iconUrl.hostname !== "github.com" || iconStem !== iconAssetStem)) {
+      throw new Error(`${entry.id}: iconUrl must be the ${entry.id} icon artifact`);
     }
     if (downloadUrl.hostname !== "github.com" || !downloadUrl.pathname.startsWith("/makekosmos/extensions/releases/download/") || !/\.kext$/i.test(downloadUrl.pathname)) {
       throw new Error(`${entry.id}: downloadUrl must be a GitHub .kext artifact`);
     }
-    if (!downloadUrl.pathname.slice(0, -".kext".length).endsWith(`/${entry.id}-v${entry.version}/${entry.id}-${entry.version}`)) {
+    if (downloadUrl.pathname.slice(0, -".kext".length) !== `/makekosmos/extensions/releases/download/${entry.id}-v${entry.version}/${entry.id}-${entry.version}`) {
       throw new Error(`${entry.id}: downloadUrl must be the ${entry.id}-v${entry.version} release artifact`);
     }
     if (!/^[a-f0-9]{64}$/.test(entry.sha256) || !Number.isSafeInteger(entry.size) || entry.size <= 0) throw new Error(`${entry.id}: invalid artifact integrity`);
@@ -80,7 +89,7 @@ export function validateCatalog(catalog) {
       throw new Error(`${id}: invalid replacement mapping`);
     }
     if (ids.has(replacement)) throw new Error(`${id}: replacement chain must terminate outside the legacy catalog`);
-    if (!/^com\.kosmos\.[a-z0-9-]+$/.test(replacement)) throw new Error(`${id}: invalid replacement mapping`);
+    if (!/^com\.kosmos\.[a-z0-9]+(?:-[a-z0-9]+)*$/.test(replacement)) throw new Error(`${id}: invalid replacement mapping`);
     if (edges.get(id) !== replacement) throw new Error(`${id}: replacement mapping has no matching deprecated entry`);
   }
   for (const id of edges.keys()) {
