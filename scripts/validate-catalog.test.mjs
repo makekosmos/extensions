@@ -79,6 +79,12 @@ test("accepts icon from a tag ref", () => {
   assert.equal(validateCatalog(c), true);
 });
 
+test("accepts icon from a commit ref", () => {
+  const c = copy();
+  c.extensions[0].iconUrl = "https://raw.githubusercontent.com/makekosmos/extensions/9bacba197b56735616408fe880d313f08f1f5d2a/extensions/akasha/icon.svg";
+  assert.equal(validateCatalog(c), true);
+});
+
 test("accepts uppercase .PNG icon extension", () => {
   const c = copy();
   c.extensions[0].iconUrl = "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/akasha/icon.SVG";
@@ -186,6 +192,14 @@ for (const [name, mutate, pattern] of [
   ["replacement id with leading hyphen", (c) => { c.extensions[1].replacementId = "com.kosmos.-arcadia"; c.replacements.arcadia = "com.kosmos.-arcadia"; }, /replacement mapping/],
   ["replacement id with trailing hyphen", (c) => { c.extensions[1].replacementId = "com.kosmos.arcadia-"; c.replacements.arcadia = "com.kosmos.arcadia-"; }, /replacement mapping/],
   ["replacement id with doubled hyphen", (c) => { c.extensions[1].replacementId = "com.kosmos.arc--adia"; c.replacements.arcadia = "com.kosmos.arc--adia"; }, /replacement mapping/],
+  ["icon ref with an encoded slash", (c) => { c.extensions[0].iconUrl = "https://raw.githubusercontent.com/makekosmos/extensions/main%2Fevil/extensions/akasha/icon.svg"; }, /iconUrl/],
+  ["icon ref with a git-illegal char", (c) => { c.extensions[0].iconUrl = "https://raw.githubusercontent.com/makekosmos/extensions/ma~in/extensions/akasha/icon.svg"; }, /iconUrl/],
+  ["icon ref with a dot-dot sequence", (c) => { c.extensions[0].iconUrl = "https://raw.githubusercontent.com/makekosmos/extensions/a..b/extensions/akasha/icon.svg"; }, /iconUrl/],
+  ["icon ref ending in .lock", (c) => { c.extensions[0].iconUrl = "https://raw.githubusercontent.com/makekosmos/extensions/main.lock/extensions/akasha/icon.svg"; }, /iconUrl/],
+  ["non-string iconUrl", (c) => { c.extensions[0].iconUrl = ["https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/akasha/icon.svg"]; }, /artifact URL/],
+  ["non-string downloadUrl", (c) => { c.extensions[0].downloadUrl = ["https://github.com/makekosmos/extensions/releases/download/akasha-v0.1.2/akasha-0.1.2.kext"]; }, /artifact URL/],
+  ["non-string version", (c) => { c.extensions[0].version = ["0.1.2"]; }, /semver/],
+  ["non-string sha256", (c) => { c.extensions[0].sha256 = ["a".repeat(64)]; }, /integrity/],
   ["icon URL with an embedded tab", (c) => { c.extensions[0].iconUrl = "https://raw.githubusercontent.com/makekosmos/extensions/main/extensions/akas\tha/icon.svg"; }, /whitespace or control/],
   ["artifact URL with a leading space", (c) => { c.extensions[0].downloadUrl = " https://github.com/makekosmos/extensions/releases/download/akasha-v0.1.2/akasha-0.1.2.kext"; }, /whitespace or control/],
   ["artifact URL with an embedded newline", (c) => { c.extensions[0].downloadUrl = "https://github.com/makekosmos/extensions/releases/download/akasha-v0.1.2/akas\nha-0.1.2.kext"; }, /whitespace or control/],

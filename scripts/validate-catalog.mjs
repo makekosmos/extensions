@@ -40,10 +40,13 @@ export function validateCatalog(catalog) {
     ids.add(entry.id);
     if (!hasVisibleText(entry.name) || !hasVisibleText(entry.description)) throw new Error(`${entry.id}: name/description required`);
     if (entry.author != null && !hasVisibleText(entry.author)) throw new Error(`${entry.id}: author must be null or a non-empty string`);
-    if (!/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$/.test(entry.version)) throw new Error(`${entry.id}: invalid semver`);
+    if (typeof entry.version !== "string" || !/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$/.test(entry.version)) throw new Error(`${entry.id}: invalid semver`);
     if (typeof entry.keplerApiVersion !== "string" || !/^\^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.test(entry.keplerApiVersion)) throw new Error(`${entry.id}: invalid keplerApiVersion range`);
     let iconUrl;
     let downloadUrl;
+    if (typeof entry.iconUrl !== "string" || typeof entry.downloadUrl !== "string") {
+      throw new Error(`${entry.id}: invalid artifact URL`);
+    }
     try {
       iconUrl = new URL(entry.iconUrl);
       downloadUrl = new URL(entry.downloadUrl);
@@ -60,7 +63,8 @@ export function validateCatalog(catalog) {
       throw new Error(`${entry.id}: iconUrl must be a GitHub image artifact`);
     }
     const iconStem = iconUrl.pathname.replace(/\.(?:png|svg)$/i, "");
-    const iconTreeStem = new RegExp(`^/makekosmos/extensions/${iconUrl.hostname === "github.com" ? "raw/" : ""}[^/]+/extensions/${entry.id}/icon$`);
+    const iconRefStem = "(?![^/]*\\.\\.)(?![^/]*\\.lock/)[A-Za-z0-9_](?:[A-Za-z0-9._-]*[A-Za-z0-9_-])?";
+    const iconTreeStem = new RegExp(`^/makekosmos/extensions/${iconUrl.hostname === "github.com" ? "raw/" : ""}${iconRefStem}/extensions/${entry.id}/icon$`);
     const iconAssetStem = `/makekosmos/extensions/releases/download/${entry.id}-v${entry.version}/${entry.id}-${entry.version}.icon`;
     if (!iconTreeStem.test(iconStem) && (iconUrl.hostname !== "github.com" || iconStem !== iconAssetStem)) {
       throw new Error(`${entry.id}: iconUrl must be the ${entry.id} icon artifact`);
@@ -71,7 +75,7 @@ export function validateCatalog(catalog) {
     if (downloadUrl.pathname.slice(0, -".kext".length) !== `/makekosmos/extensions/releases/download/${entry.id}-v${entry.version}/${entry.id}-${entry.version}`) {
       throw new Error(`${entry.id}: downloadUrl must be the ${entry.id}-v${entry.version} release artifact`);
     }
-    if (!/^[a-f0-9]{64}$/.test(entry.sha256) || !Number.isSafeInteger(entry.size) || entry.size <= 0) throw new Error(`${entry.id}: invalid artifact integrity`);
+    if (typeof entry.sha256 !== "string" || !/^[a-f0-9]{64}$/.test(entry.sha256) || !Number.isSafeInteger(entry.size) || entry.size <= 0) throw new Error(`${entry.id}: invalid artifact integrity`);
     if (entry.status === "deprecated") {
       if (typeof entry.replacementId !== "string" || !entry.replacementId || entry.replacementId === entry.id) throw new Error(`${entry.id}: deprecated entries require a distinct replacementId`);
       if (!hasVisibleText(entry.deprecationReason)) throw new Error(`${entry.id}: deprecationReason is required`);
